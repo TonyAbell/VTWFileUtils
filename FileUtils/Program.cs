@@ -26,12 +26,14 @@ namespace FileUtils
                                      .Where(w => !w.Item1.Trim().StartsWith(prefixpattern))
                                      .Where(w => w.Item1.Trim().StartsWith(fileStartWith))
                                      .Select(s => 
-                                     {                                       
+                                     {
+                                       
                                          var fileIndex = s.Item1.Substring(fileStartWith.Length).TrimEnd(Path.GetExtension(s.Item2).ToCharArray());
                                          var i = int.Parse(fileIndex);
                                          return Tuple.Create<int, string>(i, s.Item2);
                                      })
-                                     .OrderBy(o => o.Item1)                                
+                                     .OrderBy(o => o.Item1)
+                                     .Select(s=>s.Item2)
                                      .ToList();
 
                 foreach (var item in files)
