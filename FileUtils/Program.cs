@@ -22,23 +22,16 @@ namespace FileUtils
             if (Directory.Exists(dir))
             {
                 var files = Directory.EnumerateFiles(dir)
-                                     .Where(w => { 
-                                         var fileName = Path.GetFileName(w);
-                                         return !fileName.Trim().StartsWith(prefixpattern);
-                                     })
-                                     .Where(w => {
-                                            var fileName = Path.GetFileName(w);
-                                            return fileName.Trim().StartsWith(fileStartWith);
-                                     })
+                                     .Select(s=> Tuple.Create(Path.GetFileName(s),s))
+                                     .Where(w => !w.Item1.Trim().StartsWith(prefixpattern))
+                                     .Where(w => w.Item1.Trim().StartsWith(fileStartWith))
                                      .Select(s => 
-                                     {
-                                         var fileName = Path.GetFileName(s);
-                                         var fileIndex = fileName.Substring(fileStartWith.Length).TrimEnd(Path.GetExtension(s).ToCharArray());
+                                     {                                       
+                                         var fileIndex = s.Item1.Substring(fileStartWith.Length).TrimEnd(Path.GetExtension(s.Item2).ToCharArray());
                                          var i = int.Parse(fileIndex);
-                                         return Tuple.Create<int, string>(i, s);
+                                         return Tuple.Create<int, string>(i, s.Item2);
                                      })
-                                     .OrderBy(o => o.Item1)
-                                     .Select(s=>s.Item2)
+                                     .OrderBy(o => o.Item1)                                
                                      .ToList();
 
                 foreach (var item in files)
