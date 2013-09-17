@@ -12,6 +12,7 @@ namespace FileUtils
     {
         static void Main(string[] args)
         {
+            List<Tuple<string, string>> work = new List<Tuple<string, string>>();
             var dir = ConfigurationManager.AppSettings["dir"];
             var prefixpattern = ConfigurationManager.AppSettings["prefixpattern"];
             var sufixpattern = ConfigurationManager.AppSettings["sufixpattern"];
@@ -51,14 +52,16 @@ namespace FileUtils
                     var filePath = Path.GetDirectoryName(item);
                     
                     var newFileNameWithPath = filePath + "\\" + newFileName;
-                    File.Move(item, newFileNameWithPath);
-
+                    work.Add(Tuple.Create(item, newFileNameWithPath));
+                                       
                 }
-
+                Console.WriteLine("Everything looks good, press enter to rename files, press Enter to process files");
+                Console.ReadLine();
+                work.ForEach(i => File.Move(i.Item1, i.Item2));
 
             }
 
-            Console.WriteLine("Enter to exit");
+            Console.WriteLine("All Done, Press Enter to exit");
             Console.ReadLine();
 
         }
